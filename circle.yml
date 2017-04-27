@@ -55,3 +55,10 @@ deployment:
       - aws s3 sync ./dist s3://$BUCKET_NAME/release
       - ./scripts/trigger_windows_build.sh ${APPVEYOR_TOKEN} ${CIRCLE_SHA1} release
       - ./scripts/trigger_docker_build.sh ${TRIGGER_GRAFANA_PACKER_CIRCLECI_TOKEN} ${CIRCLE_TAG}
+  dashbase:
+    branch: dashbase/4.2
+    commands:
+      - cd ~/.go_workspace/src/github.com/grafana/grafana/
+      - go run build.go setup
+      - go run build.go build
+      - aws s3 sync bin/grafana-server s3://$BUCKET_NAME/grafana/release/v4.2/
