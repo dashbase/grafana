@@ -108,6 +108,7 @@ func (e *DashbaseExecutor) createRequest(query *tsdb.Query, timeFrom int64, time
   }
 
   if value, err := query.Model.Get("query").String(); err == nil {
+    value = strings.Replace(value, "@split@", " ", -1)
     sql += fmt.Sprintf("WHERE %s ", value)
   }
 
@@ -187,43 +188,3 @@ func (e *DashbaseExecutor) parseResponse(res *http.Response) ([]DashbaseResponse
   return result, nil
   //return data, nil
 }
-
-// target = this.response.data.aggregations[Object.keys(this.response.data.aggregations)[0]];
-// if (!target) {
-//   this.response.data = []; // no aggregation response, likely due to no data within timerange
-//   return this.response;
-// }
-// // NUMERIC RESPONSE
-// if (target.responseType == "numeric") {
-//   dataArr.push({
-//     "target": sentTargets[0].alias,
-//     "datapoints": [[target.value, ""]]
-//   });
-// }
-//
-// // TS RESPONSE
-// if (target.responseType == "ts" && target.histogramBuckets) {
-//   let buckets = target.histogramBuckets;
-//   dataArr.push({
-//     "target": sentTargets[0].alias,
-//     "datapoints": _.map(buckets, bucket => {
-//       return [bucket.count, bucket.timeInSec * 1000];
-//     })
-//   });
-// }
-//
-// // NESTED TS AGGREGATION RESPONSE
-// if (target.responseType == "tsa" && target.buckets) {
-//   let buckets = target.buckets;
-//   dataArr.push({
-//     "target": sentTargets[0].alias,
-//     "datapoints": _.map(buckets, bucket => {
-//       let value = bucket.count;
-//       if (bucket.hasOwnProperty("response")) {
-//         // parse response types
-//         value = bucket.response.value;
-//       }
-//       return [value, bucket.timeInSec * 1000];
-//     })
-//   });
-// }
