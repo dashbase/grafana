@@ -36,7 +36,7 @@ test:
 
 deployment:
   dashbase:
-    branch: dashbase-v4.2
+    branch: dashbase/4.2
     commands:
       - cd ~/.go_workspace/src/github.com/grafana/grafana/
       - go run build.go setup
