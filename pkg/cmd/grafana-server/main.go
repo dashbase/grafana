@@ -18,6 +18,7 @@ import (
 	"github.com/grafana/grafana/pkg/metrics"
 	"github.com/grafana/grafana/pkg/setting"
 
+	_ "github.com/dashbase/grafana/pkg/tsdb/dashbase"
 	_ "github.com/grafana/grafana/pkg/services/alerting/conditions"
 	_ "github.com/grafana/grafana/pkg/services/alerting/notifiers"
 	_ "github.com/grafana/grafana/pkg/tsdb/cloudwatch"
@@ -28,7 +29,6 @@ import (
 	_ "github.com/grafana/grafana/pkg/tsdb/postgres"
 	_ "github.com/grafana/grafana/pkg/tsdb/prometheus"
 	_ "github.com/grafana/grafana/pkg/tsdb/testdata"
-    _ "github.com/grafana/grafana/pkg/tsdb/dashbase"
 )
 
 var version = "5.0.0"

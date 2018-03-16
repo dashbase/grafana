@@ -165,14 +165,7 @@
     "rst2html": "github:thoward/rst2html#990cb89",
     "rxjs": "^5.4.3",
     "tether": "^1.4.0",
-<<<<<<< HEAD
     "tether-drop": "https://github.com/torkelo/drop/tarball/master",
     "tinycolor2": "^1.4.1"
-=======
-    "tether-drop": "https://github.com/torkelo/drop",
-    "tslint": "^4.0.2",
-    "typescript": "^2.1.4",
-    "virtual-scroll": "^1.1.1"
->>>>>>> alert support dashbase
   }
 }
