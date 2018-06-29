@@ -124,6 +124,9 @@ func (e *DashbaseExecutor) createRequest(query *tsdb.Query, timeFrom int64, time
   req.URL.RawQuery = strings.Replace(params.Encode(), "+", "%20", -1)
 
   req.Header.Set("User-Agent", "Grafana")
+  if query.DataSource.JsonData.Get("isDashbaseAuthToken").MustBool() {
+    req.Header.Set("io.dashbase.auth.token", query.DataSource.JsonData.Get("dashbaseAuthToken").MustString())
+  }
 
   // set Basic Auth
   if e.BasicAuth {
