@@ -123,6 +123,10 @@ func (e *DashbaseExecutor) createRequest(dsInfo *models.DataSource, query *tsdb.
 
 	req.Header.Set("User-Agent", "Grafana")
 
+	if query.DataSource.JsonData.Get("isDashbaseAuthToken").MustBool() {
+		req.Header.Set("io.dashbase.auth.token", query.DataSource.JsonData.Get("dashbaseAuthToken").MustString())
+	}
+
 	// set Basic Auth
 	if dsInfo.BasicAuth {
 		req.SetBasicAuth(dsInfo.BasicAuthUser, dsInfo.BasicAuthPassword)
