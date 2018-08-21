@@ -1,0 +1,60 @@
+version: 2
+jobs:
+  build:
+    working_directory: "/go/src/github.com/grafana/grafana"
+    docker:
+      - image: circleci/golang:1.9
+    steps:
+      - checkout
+
+      - setup_remote_docker:
+          docker_layer_caching: true
+
+      - restore_cache:
+          keys:
+          - yarn-{{ checksum "yarn.lock" }}
+
+      - run:
+          name: Install Deps
+          command: |
+            sudo apt-get install ruby ruby-dev rubygems build-essential -y
+            sudo gem install --no-ri --no-rdoc fpm
+            sudo apt-get install aptitude -y
+            sudo aptitude install rpm -y
+            curl -sL https://deb.nodesource.com/setup_6.x | sudo -E bash -
+            sudo apt-get install -y nodejs
+            sudo npm install -g yarn
+            sudo apt install python-pip -y
+            sudo pip install --upgrade awscli
+
+      - run:
+          name: Build
+          command: |
+            make deps-go deps-js
+            make build
+            go run build.go package
+            go run build.go latest
+
+      - save_cache:
+          key: yarn-{{ checksum "yarn.lock" }}
+          paths:
+          - "/go/src/github.com/grafana/grafana/node_modules"
+
+      - run:
+          name: Push package to aws s3
+          command: |
+            if [ "${CIRCLE_BRANCH}" == "dashbase-develop" ]; then
+              aws s3 cp dist/grafana-latest.linux-x64.tar.gz s3://${BUCKET_NAME}/${S3_KEY}/nightly/
+            fi
+            if [ "${CIRCLE_BRANCH}" == "dashbase-release" ]; then
+              aws s3 cp dist/grafana-latest.linux-x64.tar.gz s3://${BUCKET_NAME}/${S3_KEY}/release/
+            fi
+
+workflows:
+  version: 2
+  build-n-deploy:
+    jobs:
+    - build:
+        filters:
+          tags:
+            only: "/^v.*/"
