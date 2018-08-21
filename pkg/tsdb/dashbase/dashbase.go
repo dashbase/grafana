@@ -96,7 +96,9 @@ func (e *DashbaseExecutor) createRequest(dsInfo *models.DataSource, query *tsdb.
 	if value, err := query.Model.Get("target").String(); err == nil {
 		sql += fmt.Sprintf("SELECT %s ", value)
 		if alias, err := query.Model.Get("alias").String(); err == nil {
-			sql += fmt.Sprintf("AS \"%s\" ", alias)
+			if len(alias) > 0 {
+				sql += fmt.Sprintf("AS \"%s\" ", alias)
+			}
 		}
 	}
 
@@ -112,7 +114,9 @@ func (e *DashbaseExecutor) createRequest(dsInfo *models.DataSource, query *tsdb.
 	sql += fmt.Sprintf("BEFORE %d AFTER %d ", timeTo/1000, timeFrom/1000)
 
 	if value, err := query.Model.Get("limit").String(); err == nil {
-		sql += fmt.Sprintf("LIMIT %s ", value)
+		if len(value) > 0 {
+			sql += fmt.Sprintf("LIMIT %s ", value)
+		}
 	}
 
 	params := req.URL.Query()
