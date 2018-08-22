@@ -4,7 +4,7 @@
     "company": "Grafana Labs"
   },
   "name": "grafana",
-  "version": "5.0.4",
+  "version": "5.0.4-dashbase",
   "repository": {
     "type": "git",
     "url": "http://github.com/grafana/grafana.git"
